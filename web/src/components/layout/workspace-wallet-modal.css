@@ -1,0 +1,564 @@
+/* 顶栏积分中心：真实余额、充值、兑换与流水集中在一个消费型弹窗中。 */
+.workspace-wallet-modal .ant-modal-container {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 0;
+    border-radius: var(--r-4xl);
+    background: var(--background);
+    box-shadow: var(--elevation-overlay);
+    max-height: min(86dvh, 760px);
+}
+.workspace-wallet-modal .ant-modal-body {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.workspace-wallet-shell {
+    display: flex;
+    flex-direction: column;
+    height: min(86dvh, 760px);
+    min-height: 0;
+    color: var(--foreground);
+}
+
+.workspace-wallet-header {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-8);
+    padding: var(--space-8) var(--space-10);
+    padding-right: var(--space-16);
+    border-bottom: 1px solid var(--border);
+    background: var(--background);
+}
+
+.workspace-wallet-header h2 {
+    margin: var(--space-2) 0 var(--space-1-half);
+    color: var(--foreground);
+    font-size: var(--fs-title);
+    font-weight: 690;
+    letter-spacing: -0.035em;
+}
+
+.workspace-wallet-header p {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--fs-body);
+    line-height: 1.6;
+}
+
+.workspace-wallet-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1-half);
+    color: var(--control-selected-fg);
+    font-size: var(--fs-body);
+    font-weight: 650;
+}
+
+.workspace-wallet-kicker svg {
+    width: var(--space-4);
+    height: var(--space-4);
+}
+
+.workspace-wallet-balance {
+    display: grid;
+    min-width: 156px;
+    gap: var(--space-half);
+    border: 0;
+    border-radius: var(--r-2xl);
+    background: transparent;
+    padding: 0;
+    box-shadow: none;
+}
+
+.workspace-wallet-balance span,
+.workspace-wallet-balance small {
+    color: var(--muted-foreground);
+    font-size: var(--fs-caption);
+}
+
+.workspace-wallet-balance strong {
+    color: var(--foreground);
+    font-size: var(--fs-display);
+    font-weight: 720;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+}
+
+.workspace-wallet-tabs {
+    display: flex;
+    flex-shrink: 0;
+    gap: var(--space-1);
+    margin: var(--space-5) var(--space-8) 0;
+    border-radius: var(--r-xl);
+    background: var(--surface-card);
+    padding: var(--space-1);
+}
+
+.workspace-wallet-tabs button {
+    display: inline-flex;
+    min-height: var(--space-10);
+    flex: 1 1 0;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    border-radius: var(--r-lg);
+    color: var(--muted-foreground);
+    font-size: var(--fs-body);
+    font-weight: 600;
+    transition:
+        background-color 160ms cubic-bezier(0.16, 1, 0.3, 1),
+        color 160ms ease,
+        box-shadow 160ms ease;
+}
+
+.workspace-wallet-tabs button svg {
+    width: var(--space-4);
+    height: var(--space-4);
+}
+
+.workspace-wallet-tabs button[aria-selected="true"] {
+    background: var(--control-selected-bg);
+    color: var(--control-selected-fg);
+    box-shadow: none;
+}
+
+.workspace-wallet-content {
+    display: grid;
+    flex: 1;
+    min-height: 0;
+    gap: var(--space-4);
+    overflow: auto;
+    margin: var(--space-6) var(--space-8) var(--space-8);
+    padding: 0;
+}
+
+.workspace-wallet-section,
+.workspace-wallet-content.is-history {
+    border: 0;
+    background: var(--background);
+    padding: 0;
+}
+
+.workspace-wallet-content.is-history {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.workspace-wallet-history-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+}
+
+.workspace-wallet-section-heading,
+.workspace-wallet-history-toolbar {
+    display: flex;
+    flex-shrink: 0;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+}
+
+.workspace-wallet-section-heading h3,
+.workspace-wallet-history-toolbar h3 {
+    margin: 0;
+    color: var(--foreground);
+    font-size: var(--fs-body-lg);
+    font-weight: 660;
+}
+
+.workspace-wallet-section-heading p,
+.workspace-wallet-history-toolbar p {
+    margin: var(--space-1) 0 0;
+    color: var(--muted-foreground);
+    font-size: var(--fs-caption);
+}
+
+.workspace-wallet-section-heading > svg {
+    width: var(--space-5);
+    height: var(--space-5);
+    color: var(--control-selected-fg);
+}
+
+.workspace-wallet-products {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-2-half);
+}
+
+.workspace-wallet-product {
+    position: relative;
+    display: grid;
+    min-width: 0;
+    gap: var(--space-1);
+    border: 1px solid var(--border);
+    border-radius: var(--r-xl);
+    background: var(--surface-card);
+    padding: var(--space-3-half);
+    color: var(--foreground);
+    text-align: left;
+    transition:
+        border-color 180ms ease,
+        background-color 180ms ease,
+        box-shadow 180ms ease,
+        transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.workspace-wallet-product:hover,
+.workspace-wallet-product:focus-visible {
+    border-color: var(--btn-outline-hover-border);
+    background: var(--background);
+    box-shadow: none;
+    transform: none;
+}
+
+.workspace-wallet-product.is-selected {
+    border-color: var(--control-selected-border);
+    background: var(--control-selected-bg);
+}
+
+.workspace-wallet-product span,
+.workspace-wallet-product small {
+    overflow: hidden;
+    color: var(--muted-foreground);
+    font-size: var(--fs-caption);
+    text-overflow: ellipsis;
+    overflow-wrap: anywhere;
+}
+
+.workspace-wallet-product strong {
+    font-size: var(--fs-body-lg);
+    font-weight: 680;
+}
+
+.workspace-wallet-product > svg {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    width: var(--space-4);
+    height: var(--space-4);
+    color: var(--control-selected-fg);
+}
+
+.workspace-wallet-provider-row,
+.workspace-wallet-redeem-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-top: var(--space-3-half);
+}
+
+.workspace-wallet-providers {
+    display: flex;
+    min-width: 0;
+    flex: 1 1 auto;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
+
+.workspace-wallet-providers button {
+    display: inline-flex;
+    min-height: 36px;
+    align-items: center;
+    gap: var(--space-1-half);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    background: var(--surface-card);
+    padding: 0 var(--space-3);
+    color: var(--muted-foreground);
+    font-size: var(--fs-caption);
+}
+
+.workspace-wallet-providers button.is-selected {
+    border-color: var(--control-selected-border);
+    background: var(--control-selected-bg);
+    color: var(--control-selected-fg);
+}
+
+.workspace-wallet-providers button svg {
+    width: var(--space-3-half);
+    height: var(--space-3-half);
+}
+
+.workspace-wallet-redeem-row .ant-input-affix-wrapper,
+.workspace-wallet-redeem-row .ant-input {
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.workspace-wallet-ledger {
+    display: grid;
+    gap: var(--space-1);
+}
+
+.workspace-wallet-ledger-row {
+    display: grid;
+    grid-template-columns: var(--space-10) minmax(0, 1fr) minmax(0, auto);
+    align-items: center;
+    gap: var(--space-3);
+    min-height: var(--space-20);
+    row-gap: var(--space-1);
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.workspace-wallet-ledger-row:last-child {
+    border-bottom: 0;
+}
+
+.workspace-wallet-ledger-icon {
+    display: grid;
+    width: var(--space-8);
+    height: var(--space-8);
+    place-items: center;
+    border-radius: var(--r-lg);
+    background: var(--control-selected-bg);
+    color: var(--control-selected-fg);
+}
+
+.workspace-wallet-ledger-icon.is-consume {
+    background: var(--surface-card);
+    color: var(--muted-foreground);
+}
+
+.workspace-wallet-ledger-icon svg {
+    width: var(--space-4);
+    height: var(--space-4);
+}
+
+.workspace-wallet-ledger-row > div {
+    display: grid;
+    min-width: 0;
+    gap: var(--space-1);
+}
+
+.workspace-wallet-ledger-row strong {
+    font-size: var(--fs-body);
+    font-weight: 630;
+}
+
+.workspace-wallet-ledger-row span,
+.workspace-wallet-ledger-row time {
+    overflow: hidden;
+    color: var(--muted-foreground);
+    font-size: var(--fs-caption);
+    text-overflow: ellipsis;
+    overflow-wrap: anywhere;
+}
+
+.workspace-wallet-ledger-row b {
+    min-width: 76px;
+    font-size: var(--fs-body);
+    font-weight: 690;
+    text-align: right;
+}
+
+.workspace-wallet-ledger-row b.is-income {
+    color: var(--status-success);
+}
+.workspace-wallet-ledger-row b.is-consume {
+    color: var(--foreground);
+}
+
+.workspace-wallet-inline-state,
+.workspace-wallet-empty {
+    display: flex;
+    min-height: var(--space-24);
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    border: 1px solid var(--border);
+    border-radius: var(--r-xl);
+    background: var(--surface-card);
+    padding: var(--space-5);
+    color: var(--muted-foreground);
+    text-align: left;
+}
+
+.workspace-wallet-inline-state > svg,
+.workspace-wallet-empty > svg {
+    width: var(--space-6);
+    height: var(--space-6);
+}
+
+.workspace-wallet-inline-state > div,
+.workspace-wallet-empty {
+    font-size: var(--fs-caption);
+}
+
+.workspace-wallet-inline-state strong,
+.workspace-wallet-inline-state span,
+.workspace-wallet-empty strong,
+.workspace-wallet-empty span {
+    display: block;
+}
+
+.workspace-wallet-inline-state strong,
+.workspace-wallet-empty strong {
+    color: var(--foreground);
+    font-size: var(--fs-body);
+}
+
+.workspace-wallet-inline-state span,
+.workspace-wallet-empty span {
+    margin-top: var(--space-1);
+}
+
+.workspace-wallet-pagination {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-1-half);
+    margin-top: auto;
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--border);
+    color: var(--muted-foreground);
+    font-size: var(--fs-caption);
+}
+
+.workspace-wallet-pagination button {
+    display: grid;
+    width: var(--space-10);
+    height: var(--space-10);
+    place-items: center;
+    border-radius: var(--r-md);
+    background: var(--surface-card);
+}
+
+.workspace-wallet-pagination button svg {
+    width: var(--space-3-half);
+    height: var(--space-3-half);
+}
+
+.workspace-wallet-header > div:first-child {
+    min-width: 0;
+}
+.workspace-wallet-balance {
+    flex-shrink: 0;
+}
+.workspace-wallet-ledger-row time {
+    grid-column: 2;
+    grid-row: 2;
+    display: block;
+}
+.workspace-wallet-ledger-row > div {
+    grid-column: 2;
+    grid-row: 1;
+}
+.workspace-wallet-ledger-icon {
+    grid-column: 1;
+    grid-row: 1 / 3;
+}
+.workspace-wallet-ledger-row b {
+    grid-column: 3;
+    grid-row: 1 / 3;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+}
+.workspace-wallet-empty {
+    flex-direction: column;
+    min-height: 100%;
+    border: 0;
+    background: transparent;
+    text-align: center;
+    gap: var(--space-2);
+    padding: var(--space-8);
+}
+.workspace-wallet-empty > svg {
+    box-sizing: content-box;
+    padding: var(--space-4);
+    border-radius: var(--r-full);
+    background: var(--surface-card);
+    margin-bottom: var(--space-2);
+}
+.workspace-wallet-tabs button:hover {
+    color: var(--foreground);
+}
+.workspace-wallet-product:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+.workspace-wallet-pagination button:disabled {
+    color: var(--control-disabled-fg);
+    cursor: not-allowed;
+}
+.workspace-wallet-tabs button:focus-visible,
+.workspace-wallet-product:focus-visible,
+.workspace-wallet-providers button:focus-visible,
+.workspace-wallet-pagination button:focus-visible {
+    outline: var(--space-half) solid var(--control-focus-ring);
+    outline-offset: var(--space-half);
+}
+@media (max-width: 700px) {
+    .workspace-wallet-shell {
+        height: min(90dvh, 760px);
+    }
+    .workspace-wallet-modal .ant-modal-container {
+        max-height: min(90dvh, 760px);
+    }
+    .workspace-wallet-header {
+        align-items: stretch;
+        flex-direction: column;
+        gap: var(--space-4);
+        padding: var(--space-5);
+    }
+    .workspace-wallet-header h2 {
+        font-size: var(--fs-heading-lg);
+        padding-right: var(--space-6);
+    }
+    .workspace-wallet-balance {
+        min-width: 0;
+    }
+    .workspace-wallet-tabs {
+        margin: var(--space-4) var(--space-4) 0;
+        gap: 0;
+    }
+    .workspace-wallet-tabs button {
+        gap: var(--space-1);
+        font-size: var(--fs-caption);
+    }
+    .workspace-wallet-content {
+        margin: var(--space-5) var(--space-5) var(--space-6);
+    }
+    .workspace-wallet-products {
+        grid-template-columns: 1fr;
+    }
+    .workspace-wallet-provider-row,
+    .workspace-wallet-redeem-row {
+        align-items: stretch;
+        flex-direction: column;
+    }
+    .workspace-wallet-provider-row > .ant-btn,
+    .workspace-wallet-redeem-row > .ant-btn {
+        width: 100%;
+    }
+    .workspace-wallet-ledger-row {
+        grid-template-columns: var(--space-8) minmax(0, 1fr) minmax(0, auto);
+        column-gap: var(--space-2);
+    }
+    .workspace-wallet-ledger-row b {
+        min-width: 0;
+        max-width: 100px;
+    }
+    .workspace-wallet-inline-state {
+        flex-wrap: wrap;
+    }
+    .workspace-wallet-history-toolbar .ant-btn {
+        flex-shrink: 0;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .workspace-wallet-product,
+    .workspace-wallet-tabs button {
+        transition: none;
+    }
+}

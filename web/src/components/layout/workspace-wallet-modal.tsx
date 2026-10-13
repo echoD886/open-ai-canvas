@@ -13,6 +13,8 @@ import { openWorkspaceWallet, WORKSPACE_WALLET_OPEN_EVENT, type WorkspaceWalletO
 import { useAppearanceStore } from "@/stores/use-appearance-store";
 import { useUserStore } from "@/stores/use-user-store";
 
+import "./workspace-wallet-modal.css";
+
 type WalletModalTab = "topup" | "redeem" | "history";
 
 export function WorkspaceWalletHost() {
@@ -261,7 +263,7 @@ export function WorkspaceWalletModal({ open, onClose, pendingPaymentOrderId, pay
 
     return (
         <>
-            <AppModal flush open={open} title={null} footer={null} centered width="min(880px, calc(100vw - 28px))" onCancel={onClose} rootClassName="workspace-wallet-modal">
+            <AppModal flush open={open} title={null} footer={null} centered width="min(880px, calc(100vw - 28px))" onCancel={onClose} rootClassName="workspace-wallet-modal" aria-labelledby="workspace-wallet-title">
                 <div className="workspace-wallet-shell">
                     <header className="workspace-wallet-header">
                         <div>
@@ -269,33 +271,46 @@ export function WorkspaceWalletModal({ open, onClose, pendingPaymentOrderId, pay
                                 <Coins />
                                 积分中心
                             </span>
-                            <h2>充值、兑换与消费记录</h2>
+                            <h2 id="workspace-wallet-title">充值、兑换与消费记录</h2>
                             <p>为下一次创作补充积分，随时查看每一笔收支。</p>
                         </div>
                         <div className="workspace-wallet-balance">
                             <span>可用积分</span>
-                            <strong>{wallet ? formatCredits(available, 6) : "--"}</strong>
+                            <strong aria-busy={walletLoading}>{wallet ? formatCredits(available, 6) : "--"}</strong>
                             <small>冻结 {wallet ? formatCredits(wallet.account.reservedMicrocredits, 6) : "--"}</small>
                         </div>
                     </header>
 
-                    <div className="workspace-wallet-tabs" role="tablist" aria-label="积分中心">
-                        <button type="button" role="tab" aria-selected={tab === "topup"} onClick={() => setTab("topup")}>
+                    <div
+                        className="workspace-wallet-tabs"
+                        role="tablist"
+                        aria-label="积分中心"
+                        onKeyDown={(event) => {
+                            if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+                            const buttons = Array.from(event.currentTarget.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+                            const current = buttons.indexOf(document.activeElement as HTMLButtonElement);
+                            const next = event.key === "Home" ? 0 : event.key === "End" ? buttons.length - 1 : (current + (event.key === "ArrowRight" ? 1 : -1) + buttons.length) % buttons.length;
+                            event.preventDefault();
+                            buttons[next]?.focus();
+                            buttons[next]?.click();
+                        }}
+                    >
+                        <button id="wallet-tab-topup" type="button" role="tab" aria-controls="wallet-panel-topup" tabIndex={tab === "topup" ? 0 : -1} aria-selected={tab === "topup"} onClick={() => setTab("topup")}>
                             <WalletCards />
                             充值
                         </button>
-                        <button type="button" role="tab" aria-selected={tab === "redeem"} onClick={() => setTab("redeem")}>
+                        <button id="wallet-tab-redeem" type="button" role="tab" aria-controls="wallet-panel-redeem" tabIndex={tab === "redeem" ? 0 : -1} aria-selected={tab === "redeem"} onClick={() => setTab("redeem")}>
                             <TicketCheck />
                             兑换
                         </button>
-                        <button type="button" role="tab" aria-selected={tab === "history"} onClick={() => setTab("history")}>
+                        <button id="wallet-tab-history" type="button" role="tab" aria-controls="wallet-panel-history" tabIndex={tab === "history" ? 0 : -1} aria-selected={tab === "history"} onClick={() => setTab("history")}>
                             <History />
                             积分消耗历史
                         </button>
                     </div>
 
                     {tab === "topup" ? (
-                        <div className="workspace-wallet-content is-topup">
+                        <div id="wallet-panel-topup" role="tabpanel" aria-labelledby="wallet-tab-topup" tabIndex={0} className="workspace-wallet-content is-topup">
                             <section className="workspace-wallet-section">
                                 <div className="workspace-wallet-section-heading">
                                     <div>
@@ -375,7 +390,7 @@ export function WorkspaceWalletModal({ open, onClose, pendingPaymentOrderId, pay
                             </section>
                         </div>
                     ) : tab === "redeem" ? (
-                        <div className="workspace-wallet-content is-redeem">
+                        <div id="wallet-panel-redeem" role="tabpanel" aria-labelledby="wallet-tab-redeem" tabIndex={0} className="workspace-wallet-content is-redeem">
                             <section className="workspace-wallet-section is-redeem">
                                 <div className="workspace-wallet-section-heading">
                                     <div>
@@ -400,7 +415,7 @@ export function WorkspaceWalletModal({ open, onClose, pendingPaymentOrderId, pay
                             </section>
                         </div>
                     ) : (
-                        <div className="workspace-wallet-content is-history">
+                        <div id="wallet-panel-history" role="tabpanel" aria-labelledby="wallet-tab-history" tabIndex={0} className="workspace-wallet-content is-history">
                             <div className="workspace-wallet-history-toolbar">
                                 <div>
                                     <h3>积分消耗历史</h3>
@@ -511,7 +526,7 @@ function WalletLedgerRow({ entry }: { entry: CreditLedgerEntry }) {
                 <strong>{title}</strong>
                 <span>{[entry.scene, entry.model, entry.note].filter(Boolean).join(" · ") || "积分账户变动"}</span>
             </div>
-            <time>{new Date(entry.createdAt).toLocaleString("zh-CN", { hour12: false })}</time>
+            <time dateTime={entry.createdAt}>{new Date(entry.createdAt).toLocaleString("zh-CN", { hour12: false })}</time>
             <b className={positive ? "is-income" : "is-consume"}>
                 {positive ? "+" : ""}
                 {formatCredits(entry.amountMicrocredits, 6)}
