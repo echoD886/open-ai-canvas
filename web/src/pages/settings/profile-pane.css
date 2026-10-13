@@ -8,10 +8,8 @@
     padding-bottom: var(--space-6);
 }
 .profile-overview {
-    padding: var(--space-5);
-    border: 1px solid var(--user-border);
-    border-radius: var(--r-lg);
-    background: var(--user-surface-muted);
+    padding: var(--space-6) 0;
+    border-block: 1px solid var(--user-border);
 }
 .profile-overview-heading h3,
 .profile-security-heading h3 {
@@ -35,8 +33,8 @@
     margin-top: var(--space-5);
 }
 .profile-avatar-preview {
-    width: 88px;
-    height: 88px;
+    width: var(--space-20);
+    height: var(--space-20);
     flex-shrink: 0;
     border-radius: var(--r-lg);
     object-fit: cover;
@@ -88,7 +86,6 @@
     display: flex;
     align-items: flex-start;
     gap: var(--space-3);
-    min-height: 76px;
     margin-bottom: var(--space-4);
 }
 .profile-card-icon {
@@ -99,8 +96,8 @@
     align-items: center;
     justify-content: center;
     border-radius: var(--user-radius-control);
-    background: var(--user-accent-soft);
-    color: var(--user-accent);
+    background: var(--user-surface-muted);
+    color: var(--user-ink-muted);
 }
 .profile-card-heading h4 {
     margin: 0;
@@ -271,9 +268,6 @@
     }
 }
 @container (max-width: 470px) {
-    .profile-overview {
-        padding: var(--space-4);
-    }
     .profile-overview-main {
         display: grid;
         grid-template-columns: 64px minmax(0, 1fr);
